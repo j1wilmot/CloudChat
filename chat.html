@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+	<title>
+		WebSocket Chat
+	</title>
+
+<style>
+#chat-messages {
+	width: 400px;
+	height: 100px;
+	border: solid 2px black;
+}
+
+#chat-to-send {
+	width: 400px;
+	resize: none;
+}
+
+#send {
+	height: 75px;
+	width: 75px;
+}
+</style>
+<head>
+<body>
+	<script>
+	window.onload = init;
+
+	function init() {
+		var ws = new WebSocket("ws://localhost:8080/");
+		
+		ws.onopen = function() {
+			ws.send("TESTING");
+		};
+		ws.onmessage = function(evt) {
+			console.log(evt.data);
+		};
+		
+		var send = document.getElementById('send');
+		send.onclick = function() {
+			if (ws.readyState === 1) {
+				ws.send("SENDING!");
+			} else {
+				console.log("System not in state to send message");
+			}
+		};
+
+		var logout = document.getElementById("logout");
+		
+	}
+
+	</script>
+
+	<div id="chat-messages">
+	</div>
+	<textarea id="chat-to-send">
+	</textarea>
+	<button id="send">Send</button>
+	<button id="logout">Logout</button>
+
+</body>
+
+
+</html>
