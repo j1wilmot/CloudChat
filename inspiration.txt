@@ -1,0 +1,7 @@
+Some sites that were useful for becoming acquanted with web sockets and ruby websocket servers:
+
+https://github.com/fxposter/websockets-chat
+http://www.w3.org/TR/2009/WD-websockets-20091222/#handler-websocket-onmessage
+http://www.websocket.org/echo.html
+https://github.com/igrigorik/em-websocket/blob/master/examples/test.html
+http://www.igvita.com/2009/12/22/ruby-websockets-tcp-for-the-browser/

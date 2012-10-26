@@ -1,0 +1,47 @@
+#chat {
+	padding-top: 50px;
+	width: 650px;
+	margin: 0px auto;
+}
+
+#messages {
+	height: 200px;
+	overflow-y: scroll;
+	background-color: white;
+	border-radius: 10px;
+	padding: 10px 10px 10px 10px;
+	font-size: larger;
+}
+
+#send-text {
+	border: none;
+	height: 50px;
+	width: 530px;
+	resize: none;
+	border-radius: 10px;
+	outline: none;
+	padding: 10px 10px 10px 10px;
+	font-size: larger;
+}
+
+#send-area {
+	padding-top: 20px;
+	width: 650px;
+	height: 78px;
+	margin: 0px auto;
+}
+
+#send-button {
+	height: 70px;
+	width: 75px;
+	float: right;
+	border-radius: 10px;
+}
+
+.sys-msg {
+	color: #B30404;
+}
+
+body {
+	background-image:url('http://www.mayang.com/textures/Nature/images/Clouds/dramatic_clouds_sunset_180093.JPG');
+}

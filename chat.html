@@ -1,64 +1,20 @@
 <!DOCTYPE HTML>
 <html>
-	<title>
-		WebSocket Chat
-	</title>
-
-<style>
-#chat-messages {
-	width: 400px;
-	height: 100px;
-	border: solid 2px black;
-}
-
-#chat-to-send {
-	width: 400px;
-	resize: none;
-}
-
-#send {
-	height: 75px;
-	width: 75px;
-}
-</style>
 <head>
-<body>
-	<script>
-	window.onload = init;
-
-	function init() {
-		var ws = new WebSocket("ws://localhost:8080/");
-		
-		ws.onopen = function() {
-			ws.send("TESTING");
-		};
-		ws.onmessage = function(evt) {
-			console.log(evt.data);
-		};
-		
-		var send = document.getElementById('send');
-		send.onclick = function() {
-			if (ws.readyState === 1) {
-				ws.send("SENDING!");
-			} else {
-				console.log("System not in state to send message");
-			}
-		};
-
-		var logout = document.getElementById("logout");
-		
-	}
-
-	</script>
-
-	<div id="chat-messages">
-	</div>
-	<textarea id="chat-to-send">
-	</textarea>
-	<button id="send">Send</button>
-	<button id="logout">Logout</button>
-
-</body>
-
-
+	<title>
+		Web Socket Chat
+	</title>
+	<link rel="stylesheet" type="text/css" href="chat.css">
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+	<script type="text/javascript" src="chat.js"></script>
+</head>
+	<body>
+		<div id="chat">
+			<div id="messages"></div>
+			<div id="send-area">
+				<textarea id="send-text"></textarea>
+				<button id="send-button">Send</button>
+			</div>
+		</div>
+	</body>
 </html>
