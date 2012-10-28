@@ -1,9 +1,20 @@
 require 'em-websocket'
+require 'json'
 
+class Message
+
+	attr_reader :type, :message, :time
+
+	def initialize(type, message)
+		@type = type
+		@message = message
+		@time = Date.new
+	end
+end
 
 class Connection
 
-	attr_accessor :name, :websocket
+	attr_reader :name, :websocket
 
 	def initialize(name, websocket)
 		@name = name
@@ -16,50 +27,73 @@ class Server
 	def initialize()
 		#session => connection
 		@open_connections = {}
+		@@userNum = 0
 	end
 
 	def start()
 		log "Starting chat server..."
 		EventMachine::WebSocket.start(:host => "0.0.0.0", :port => 8080) do |ws|
 			ws.onopen { open_connection(ws) }
-			ws.onmessage { |msg| send_user_message_to_all(ws, msg); }
+			ws.onmessage { |message| send_message(ws, message) }
 			ws.onclose { remove_connection(ws) }
 		end
 		log "Server has been shut down."
 	end
 
+	def send_message(ws, message)
+		name = @open_connections[ws].name
+		json = JSON user: name, message: message, time: get_time()
+		send(json)
+		log(json)
+	end
+
 	def open_connection(ws)
-		name = "User#{@open_connections.size + 1}"
+		name = "User#{@@userNum}"
+		@@userNum += 1
 		new_connection = Connection.new(name, ws)
 		@open_connections[ws] = new_connection
-		send_system_message_to_all(ws, "#{name} has joined the chat.")
-		log "#{name} has logged in."
+		provide_user_list(ws)
+		message = JSON action: "user_join", user: name, time: get_time()
+		send_to_others(message, ws)
 	end
 
-	# Send a message to all open connections
-	def send_user_message_to_all(ws, msg)
-		user_name = @open_connections[ws].name
+	def provide_user_list(ws)
+		usernames = []
 		@open_connections.each_value do |connection|
-			connection.websocket.send("#{user_name}: #{msg}")
+			usernames << connection.name
 		end
-	end
-
-	def send_system_message_to_all(ws, msg)
-		msg = "<span class='sys-msg'>#{msg}</span>"
-		@open_connections.each_value do |connection|
-			connection.websocket.send(msg)
-		end
+		message = JSON usernames: usernames
+		ws.send(message)
+		log(message)
 	end
 
 	def remove_connection(ws)
 		connection = @open_connections.delete(ws)
-		msg = "#{connection.name} has logged out."
-		log(msg)
-		send_system_message_to_all(ws, msg)
+		message = JSON action: "user_leave", user: connection.name, time: get_time()
+		send(message)
 	end
 
-	def log(msg)
-		puts msg
+	def get_time()
+		Time.now.strftime("%H:%M:%S")
+	end
+
+	# Sends message to all websockets, excluding provided websocket
+	def send_to_others(message, ws_to_exclue)
+		@open_connections.each_value do |connection|
+			connection.websocket.send(message) unless connection.websocket == ws_to_exclue
+		end
+		log(message)
+	end
+
+	def send(message)
+		@open_connections.each_value do |connection|
+			connection.websocket.send(message)
+		end
+		log(message)
+	end
+
+	def log(message)
+		puts message
 	end
 end
 

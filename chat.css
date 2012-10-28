@@ -4,11 +4,26 @@
 	margin: 0px auto;
 }
 
+#users {
+	height: 200px;
+	width: 100px;
+	float: right;
+	border-radius: 10px;
+	margin-bottom: 10px;
+	padding: 10px 10px 10px 10px;
+	font-size: larger;
+	background-color: white;
+	overflow-y: scroll;
+}
+
 #messages {
 	height: 200px;
+	width: 500px;
+	float: left;
 	overflow-y: scroll;
 	background-color: white;
 	border-radius: 10px;
+	margin-right: 10px;
 	padding: 10px 10px 10px 10px;
 	font-size: larger;
 }
@@ -16,12 +31,13 @@
 #send-text {
 	border: none;
 	height: 50px;
-	width: 530px;
+	width: 540px;
 	resize: none;
 	border-radius: 10px;
 	outline: none;
 	padding: 10px 10px 10px 10px;
 	font-size: larger;
+	margin-right: 10px;
 }
 
 #send-area {
@@ -40,6 +56,20 @@
 
 .sys-msg {
 	color: #B30404;
+}
+
+.usr-msg {
+	color: #1B32E0;
+}
+
+.username {
+	background-color: lightblue;
+	border-radius: 10px;
+	padding-left: 5px;
+	padding-right: 5px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	text-align: center;
 }
 
 body {
