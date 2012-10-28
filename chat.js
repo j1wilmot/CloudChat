@@ -1,16 +1,28 @@
 $(document).ready(init);
 var GLOBAL = {};
 GLOBAL.system = "System";
+GLOBAL.text_focused = false;
 
 function init() {
 	initWebwebSocket();
 	initSend();
+	$('#send-text').val("Type messagess here...");
+	$('#send-text').click(function() {
+		if (!GLOBAL.text_focused) {
+			$('#send-text').val('');
+			GLOBAL.text_focused = true;
+		}
+	});
 }
 
 function initWebwebSocket() {
 	GLOBAL.webSocket = new WebSocket("ws://localhost:8080/");
 	GLOBAL.webSocket.onopen = wsOnOpen;
 	GLOBAL.webSocket.onmessage = wsOnMessage;
+	GLOBAL.webSocket.onerror = function() {
+		console.log("error");
+		addMessage(getTime(), GLOBAL.system, "ERROR");
+	};
 }
 
 function wsOnMessage(event) {
@@ -78,6 +90,7 @@ function addMessage(time, user, text) {
 }
 
 function initSend() {
+	// Send text over websocket when send button is clicked
 	$('#send-button').click(function() {
 		if (GLOBAL.webSocket.readyState === 1) {
 			var text = $('#send-text').val();
@@ -87,6 +100,7 @@ function initSend() {
 			log("System not in state to send message");
 		}
 	});
+	// Set enter key to trigger send button
 	$('#send-text').keydown(function(event) {
 	  if ( event.which == 13 ) {
 	     $('#send-button').click();

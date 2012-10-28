@@ -72,6 +72,13 @@
 	text-align: center;
 }
 
+#cover {
+	width: 1000px;
+	height: 1000px;
+	background-color: green;
+	float: left;
+}
+
 body {
-	background-image:url('http://www.mayang.com/textures/Nature/images/Clouds/dramatic_clouds_sunset_180093.JPG');
+	background-color: lightgray;
 }
