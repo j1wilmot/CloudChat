@@ -11,15 +11,24 @@
 	<body>
 		<h1>Cloud Chat</h1>
 		<h3>A websocket experiment</h3>
+		<button id="logout">Logout</button>
 		<div id="chat">
 			<div id="messages"></div>
 			<div id="users"></div>
 			<div id="send-area">
-				<textarea id="send-text"></textarea>
+				<textarea id="send-text" placeholder="Type messages here"></textarea>
 				<button id="send-button">Send</button>
 			</div>
 		</div>
-
-		<div id="cover"></div>
+		<div id="login-cover">
+			<div id="login">
+				<div>
+					<h3>Login to chat</h3>
+				</div>
+				<div id="notification"></div>
+				<input id="login-name" type="text" placeholder="Username">
+				<div id="login-button">Login</div>
+			</div>
+		</div>
 	</body>
 </html>
