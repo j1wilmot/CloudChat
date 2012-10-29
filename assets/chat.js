@@ -1,6 +1,8 @@
 $(document).ready(init);
+// TODO use module pattern
 var GLOBAL = {};
 GLOBAL.system = "System";
+GLOBAL.webSocket = null;
 
 function init() {
 	initWebwebSocket();
@@ -63,7 +65,7 @@ function wsOnMessage(event) {
 
 function logout() {
 	// Clear out any notifications that may remain from a previous login
-	// We don't this on login becuase removal shows before fade effect
+	// We don't do this on login becuase removal shows before fade effect
 	$('#notification').empty();
 	$('#notification').hide();
 	var message = "{ \"action\":\"logout\" }"
@@ -137,16 +139,16 @@ function removeUser(user, time) {
 	addMessage(time, GLOBAL.system, user + ' has left the chat');
 }
 
-function padDateField(dateField) {
-	return (dateField.toString().length === 1) ?
-		"0" + dateField :
-		dateField;
-}
-
 function addMessage(time, user, text) {
 	var klass = (user === GLOBAL.system) ? 'sys-msg' : 'usr-msg';
 	var message = '<span class="' + klass + '">' + user + ' (' + time + ') </span>' + text;
 	$('#messages').append('<div>' + message + '</div>');
+}
+
+function padDateField(dateField) {
+	return (dateField.toString().length === 1) ?
+		"0" + dateField :
+		dateField;
 }
 
 // Need to pad time fields if single digit

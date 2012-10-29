@@ -12,6 +12,7 @@ class User
 	end
 end
 
+# WebSocket server for our chat application
 class Server
 
 	def initialize()
@@ -29,9 +30,11 @@ class Server
 		log "Server has been shut down."
 	end
 
+	# Handle messages we receive from clients
+	# Generally we broadcast user actions to other clients
 	def handle_message(ws, message)
 		json = JSON.parse message
-		log(json)
+		log("Incoming: " + json.to_s)
 		if json["action"] == "login-attempt"
 			username = json["username"]
 			login(ws, username)
@@ -77,6 +80,7 @@ class Server
 		send_to_others(message, ws)
 	end
 
+	# Return true if username associated with a connection, else false
 	def username_already_connected(username)
 		@users.each_value do |connection|
 			name = connection.name
@@ -87,15 +91,18 @@ class Server
 		return false
 	end
 
+	# Send list of connected usernames to new connection
+	# Used client side to populate chatroom user list
 	def provide_user_list_to_new_connection(ws)
 		usernames = collect_connected_usernames()
 		message = JSON action: "login_success", usernames: usernames, time: get_time()
 		ws.send(message)
-		log(message)
+		log("Outgoing: " + message)
 	end
 
+	# Returns array of connected usernames
 	def collect_connected_usernames()
-		# Should be a way to use enum.map here, but this works for now
+		# Must be a better way to do this, but this works for now
 		usernames = []
 		@users.each_value do |connection|
 			usernames << connection.name
@@ -103,6 +110,8 @@ class Server
 		return usernames
 	end
 
+	# Handle user disconnect / logout
+	# Remove connection and notify other clients of disconnect
 	def remove_connection(ws)
 		connection = @users.delete(ws)
 		if connection == nil
@@ -114,20 +123,21 @@ class Server
 		send(message)
 	end
 
-	def get_time()
-		Time.now.strftime("%H:%M:%S")
-	end
-
-	# Sends message to all websockets, excluding provided websocket
+	# Send message to all connected users, excluding provided websocket
 	def send_to_others(message, ws_to_exclue)
 		@users.each_value do |connection|
 			connection.websocket.send(message) unless connection.websocket == ws_to_exclue
 		end
-		log(message)
+		log("Outgoing: " + message)
 	end
 
+	# Send message to all connected users
 	def send(message)
 		send_to_others(message, nil)
+	end
+
+	def get_time()
+		Time.now.strftime("%H:%M:%S")
 	end
 
 	def log(message)
